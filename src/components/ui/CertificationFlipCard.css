@@ -1,0 +1,119 @@
+.certification-flip-card {
+    perspective: 62.5rem;
+    width: 100%;
+    max-width: 22rem;
+    height: 22.5rem;
+}
+
+.certification-flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.certification-flip-card:hover .certification-flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.certification-flip-card-front,
+.certification-flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.certification-flip-card-front {
+    z-index: 2;
+}
+
+.certification-flip-card-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+/* Light theme */
+.certification-flip-card-front.light {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 0.0625rem solid rgba(107, 79, 187, 0.2);
+    box-shadow: 0 0.625rem 2.5rem rgba(107, 79, 187, 0.1);
+}
+
+.certification-flip-card-back.light {
+    background: linear-gradient(135deg, #0f172a 0%, #182E6F 100%);
+    border: 0.0625rem solid rgba(15, 23, 42, 0.3);
+}
+
+/* Dark theme */
+.certification-flip-card-front.dark {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 0.0625rem solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0.625rem 2.5rem rgba(139, 92, 246, 0.15);
+}
+
+.certification-flip-card-back.dark {
+    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    border: 0.0625rem solid rgba(139, 92, 246, 0.3);
+}
+
+/* Certificate image container */
+.certification-image {
+    width: 100%;
+    height: 10rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.certification-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Verify button */
+.verify-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.verify-button.light {
+    background: white;
+    color: #182E6F;
+}
+
+.verify-button.dark {
+    background: #0a0a0a;
+    color: #3b82f6;
+}
+
+.verify-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.3125rem 1.25rem rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 48rem) {
+    .certification-flip-card {
+        max-width: 100%;
+        height: 20rem;
+    }
+
+    .certification-image {
+        height: 8.75rem;
+    }
+}
