@@ -6,7 +6,7 @@ export default function HeroLight() {
     if (theme === 'dark') return null;
 
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div className="relative w-full h-screen overflow-hidden bg-light-bg">
             {/* Video Background */}
             <video
                 autoPlay
