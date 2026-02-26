@@ -23,7 +23,7 @@ const projectsData = {
             title: 'Academic Credential Verification and Issuance System',
             description: 'Authentix is a decentralized digital credential verification and issuance system that ensures certificates remain secure, tamper-proof, and accessible even if the issuing institution goes offline.',
             image: authentixImage,
-            blogLink: '#', // Add blog link when available
+            blogLink: 'https://blogs.umashankars.co.in/blog/academic-credential-system', 
             githubLink: 'https://github.com/UmashankarGouda/Authentix-System',
             category: 'Software',
             technologies: ['AES-GCM Cryptography', 'RSA-OAEP Encryption', "Shamir's SS Algorithm", 'Ethereum'],
