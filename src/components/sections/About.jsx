@@ -1,15 +1,23 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import RotatingText from '../ui/RotatingText';
 import PixelTransition from '../ui/PixelTransition';
 
 export default function About() {
     const { theme } = useTheme();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <section
             id="about"
-            style={{ padding: '6rem 5vw' }}
+            style={{ padding: isMobile ? '3rem 4vw' : '6rem 5vw' }}
             className={`min-h-screen flex items-center justify-center
                 ${theme === 'dark' ? 'bg-dark-bg' : 'bg-light-bg'}
             `}
@@ -22,10 +30,10 @@ export default function About() {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                     className="w-full flex justify-center"
-                    style={{ marginBottom: '5rem' }}
+                    style={{ marginBottom: isMobile ? '2.5rem' : '5rem' }}
                 >
                     <h2
-                        className={`text-4xl md:text-6xl font-bold flex items-center justify-center gap-4 flex-wrap
+                        className={`text-3xl md:text-4xl lg:text-6xl font-bold flex items-center justify-center gap-3 md:gap-4 flex-wrap
                             ${theme === 'dark' ? 'text-white' : 'text-light-accent'}
                         `}
                     >
@@ -38,7 +46,7 @@ export default function About() {
                             style={{ padding: '0.5rem 0.5rem' }}
                         >
                             <RotatingText
-                                texts={['ME', 'UMASHANKAR', 'UNGOVERNABLE']}
+                                texts={['ME', 'UMASHANKAR']}
                                 mainClassName="text-white"
                                 staggerFrom="last"
                                 initial={{ y: "100%" }}
@@ -53,10 +61,10 @@ export default function About() {
                     </h2>
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-16 items-center justify-items-center">
-                    {/* Photo with Strong Animation - Smaller size */}
+                <div className={`grid ${isMobile ? 'grid-cols-1 gap-8' : 'md:grid-cols-2 gap-16'} items-center justify-items-center`}>
+                    {/* Photo with Strong Animation - Smaller size on mobile */}
                     <motion.div
-                        initial={{ x: -200, opacity: 0, scale: 0.9, rotate: -5 }}
+                        initial={{ x: isMobile ? -50 : -200, opacity: 0, scale: 0.9, rotate: isMobile ? 0 : -5 }}
                         whileInView={{ x: 0, opacity: 1, scale: 1, rotate: 0 }}
                         transition={{
                             type: 'spring',
@@ -64,9 +72,9 @@ export default function About() {
                             damping: 10,
                             mass: 1
                         }}
-                        viewport={{ once: false, amount: 0.3, margin: "-100px" }}
+                        viewport={{ once: false, amount: 0.2 }}
                         className="relative w-full flex justify-center"
-                        style={{ maxWidth: '25rem' }}
+                        style={{ maxWidth: isMobile ? '16rem' : '25rem' }}
                     >
                         <PixelTransition
                             firstContent={
@@ -86,13 +94,13 @@ export default function About() {
                                         backgroundColor: theme === 'dark' ? '#1a1a2e' : '#182E6F'
                                     }}
                                 >
-                                    <p style={{ fontWeight: 900, fontSize: '3rem', color: '#ffffff' }}>Hello, there !</p>
+                                    <p style={{ fontWeight: 900, fontSize: isMobile ? '2rem' : '3rem', color: '#ffffff' }}>Hello, there !</p>
                                 </div>
                             }
-                            gridSize={15}
+                            gridSize={isMobile ? 10 : 15}
                             pixelColor="#ffffff"
                             once={false}
-                            animationStepDuration={0.6}
+                            animationStepDuration={0.5}
                             aspectRatio="133.33%"
                             style={{
                                 width: '100%',
@@ -101,6 +109,28 @@ export default function About() {
                                 boxShadow: theme === 'dark'
                                     ? '0 25px 50px -12px rgba(139, 92, 246, 0.2)'
                                     : '0 25px 50px -12px rgba(24, 46, 111, 0.2)'
+                            }}
+                        />
+
+                        {/* Click me arrow */}
+                        <motion.img
+                            src="/Clickme.svg"
+                            alt="Click me"
+                            animate={{
+                                y: [0, -5, 0],
+                                rotate: [0, 3, -3, 0]
+                            }}
+                            transition={{
+                                repeat: Infinity,
+                                duration: 2,
+                                ease: 'easeInOut'
+                            }}
+                            className="absolute pointer-events-none z-10"
+                            style={{
+                                top: isMobile ? '-1.5rem' : '-2rem',
+                                left: isMobile ? '-1rem' : '-2rem',
+                                width: isMobile ? '5rem' : '7rem',
+                                height: 'auto'
                             }}
                         />
 
@@ -130,27 +160,27 @@ export default function About() {
                         className="space-y-10"
                     >
                         <p
-                            className={`text-lg leading-relaxed text-justify ${theme === 'dark' ? 'text-gray-300' : 'text-light-accent/80'}`}
-                            style={{ marginBottom: '2rem' }}
+                            className={`text-base md:text-lg leading-relaxed text-justify ${theme === 'dark' ? 'text-gray-300' : 'text-light-accent/80'}`}
+                            style={{ marginBottom: '1.5rem' }}
                         >
                             I'm an engineering student who enjoys building things that actually do something, from Java-based backend systems and cloud-deployed platforms to clean, scroll-stopping designs.
                         </p>
 
                         <p
-                            className={`text-lg leading-relaxed text-justify ${theme === 'dark' ? 'text-gray-400' : 'text-light-accent/70'}`}
-                            style={{ marginBottom: '2rem' }}
+                            className={`text-base md:text-lg leading-relaxed text-justify ${theme === 'dark' ? 'text-gray-400' : 'text-light-accent/70'}`}
+                            style={{ marginBottom: '1.5rem' }}
                         >
                             I live at the intersection of technology, creativity, and impact. One day I'm designing posters and managing social media for brands, the next I'm working on blockchain verification portals, voice-driven AI solutions in regional languages, or leading teams under IEEE CIS. I've built projects for hackathons, startups, college clubs, and open-source communities—always with the same goal: make tech useful, accessible, and human.
                         </p>
 
                         <p
-                            className={`text-lg leading-relaxed text-justify ${theme === 'dark' ? 'text-gray-400' : 'text-light-accent/70'}`}
-                            style={{ marginBottom: '2rem' }}
+                            className={`text-base md:text-lg leading-relaxed text-justify ${theme === 'dark' ? 'text-gray-400' : 'text-light-accent/70'}`}
+                            style={{ marginBottom: '1.5rem' }}
                         >
                             I'm especially interested in Java backend development, cloud computing, AI/ML applications, and product thinking, and I learn best by building real systems end-to-end rather than just reading about them. Along the way, I've picked up experience in leadership, project coordination, client communication, and turning vague ideas into shipped products.
                         </p>
 
-                        <p className={`text-lg leading-relaxed italic text-justify ${theme === 'dark' ? 'text-gray-500' : 'text-light-accent/60'}`}>
+                        <p className={`text-base md:text-lg leading-relaxed italic text-justify ${theme === 'dark' ? 'text-gray-500' : 'text-light-accent/60'}`}>
                             And when I need a creative reset, I genuinely enjoy experimenting with graphic design and visual storytelling.
                         </p>
                     </motion.div>

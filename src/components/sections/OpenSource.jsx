@@ -1,10 +1,18 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { GitHubCalendar } from 'react-github-calendar';
 import Shuffle from '../ui/ShuffleText';
 
 export default function OpenSource() {
     const { theme } = useTheme();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Custom theme for the GitHub calendar
     const calendarTheme = {
@@ -13,13 +21,13 @@ export default function OpenSource() {
     };
 
     // Custom block size and margin for better visibility
-    const blockSize = 12;
-    const blockMargin = 3;
+    const blockSize = isMobile ? 8 : 12;
+    const blockMargin = isMobile ? 2 : 3;
 
     return (
         <section
             id="open-source"
-            style={{ padding: '6rem 5vw' }}
+            style={{ padding: isMobile ? '3rem 4vw' : '6rem 5vw' }}
             className={`min-h-screen flex items-center justify-center
                 ${theme === 'dark' ? 'bg-dark-bg' : 'bg-light-bg'}
             `}
@@ -32,10 +40,10 @@ export default function OpenSource() {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: false, amount: 0.3 }}
                     className="flex justify-center"
-                    style={{ marginBottom: '4rem' }}
+                    style={{ marginBottom: isMobile ? '2rem' : '4rem' }}
                 >
                     <h2
-                        className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white"
+                        className="text-xl md:text-3xl lg:text-4xl font-bold text-center text-white"
                         style={{
                             background: theme === 'dark'
                                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
@@ -73,29 +81,29 @@ export default function OpenSource() {
                 >
                     {/* Calendar Container */}
                     <div
-                        style={{ minHeight: '18rem' }}
-                        className={`p-6 md:p-8 rounded-2xl w-full max-w-4xl flex flex-col justify-center
+                        style={{ minHeight: isMobile ? '12rem' : '18rem' }}
+                        className={`p-4 md:p-8 rounded-2xl w-full max-w-4xl flex flex-col justify-center
                             ${theme === 'dark'
                                 ? 'bg-dark-surface border border-dark-primary/30'
                                 : 'bg-white border border-light-primary/20 shadow-lg'}
                         `}
                     >
                         <h3
-                            className={`text-xl md:text-2xl font-bold mb-8 text-center
+                            className={`text-lg md:text-2xl font-bold mb-4 md:mb-8 text-center
                                 ${theme === 'dark' ? 'text-white' : 'text-light-accent'}
                             `}
                         >
                             GitHub Contributions
                         </h3>
 
-                        <div className="flex justify-center py-4">
+                        <div className="flex justify-center py-2 md:py-4 overflow-x-auto">
                             <GitHubCalendar
                                 username="UmashankarGouda"
                                 blockSize={blockSize}
                                 blockMargin={blockMargin}
                                 colorScheme={theme === 'dark' ? 'dark' : 'light'}
                                 theme={calendarTheme}
-                                fontSize={14}
+                                fontSize={isMobile ? 10 : 14}
                                 style={{
                                     color: theme === 'dark' ? '#e2e8f0' : '#1e293b'
                                 }}
@@ -103,20 +111,20 @@ export default function OpenSource() {
                         </div>
 
                         {/* GitHub Stats */}
-                        <div className="mt-10 flex flex-wrap justify-center gap-4 md:gap-8">
+                        <div className="mt-6 md:mt-10 flex flex-wrap justify-center gap-4 md:gap-8">
                             <a
                                 href="https://github.com/UmashankarGouda"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ cursor: 'pointer', zIndex: 10, position: 'relative' }}
-                                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105
+                                className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-full transition-all duration-300 hover:scale-105 text-sm md:text-base
                                     ${theme === 'dark'
                                         ? 'bg-dark-primary/20 text-dark-primary hover:bg-dark-primary/30'
                                         : 'bg-light-primary/10 text-light-primary hover:bg-light-primary/20'}
                                 `}
                             >
                                 <svg
-                                    className="w-5 h-5"
+                                    className="w-4 h-4 md:w-5 md:h-5"
                                     fill="currentColor"
                                     viewBox="0 0 24 24"
                                 >

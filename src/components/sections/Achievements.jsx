@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import TextType from '../ui/TextType';
 import Achievement3DCard from '../ui/Achievement3DCard';
@@ -36,11 +37,18 @@ const achievementsData = [
 
 export default function Achievements() {
     const { theme } = useTheme();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <section
             id="achievements"
-            style={{ padding: '6rem 2vw' }}
+            style={{ padding: isMobile ? '3rem 2vw' : '6rem 2vw' }}
             className={`min-h-screen flex flex-col items-center justify-center relative overflow-hidden
                 ${theme === 'dark' ? 'bg-dark-bg' : 'bg-light-bg'}
             `}
@@ -53,10 +61,10 @@ export default function Achievements() {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                     className="flex justify-center"
-                    style={{ marginBottom: '4rem' }}
+                    style={{ marginBottom: isMobile ? '2rem' : '4rem' }}
                 >
                     <h2
-                        className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-white uppercase"
+                        className="text-2xl md:text-4xl lg:text-5xl font-bold text-center text-white uppercase"
                         style={{
                             background: theme === 'dark'
                                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
@@ -80,7 +88,7 @@ export default function Achievements() {
                 </motion.div>
 
                 {/* Achievements Grid */}
-                <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-12">
+                <div className={`flex flex-wrap items-center justify-center ${isMobile ? 'gap-6' : 'gap-8 lg:gap-12'}`}>
                     {achievementsData.map((achievement, index) => (
                         <motion.div
                             key={index}

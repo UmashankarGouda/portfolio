@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const navItems = [
     { name: 'Home', href: '#home' },
@@ -20,6 +20,13 @@ const navItems = [
 export default function Navbar() {
     const { theme } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Scroll-based visibility — always visible
     const { scrollY } = useScroll();
@@ -42,14 +49,17 @@ export default function Navbar() {
                 boxShadow: theme === 'dark'
                     ? '0 0.5rem 2rem rgba(0, 0, 0, 0.3)'
                     : '0 0.5rem 2rem rgba(0, 0, 0, 0.1)',
-                minHeight: '4rem',
+                minHeight: isMobile ? '3rem' : '4rem',
             }}
             className="fixed top-[1rem] left-1/2 -translate-x-1/2 z-50 rounded-full"
         // Using inline style for precise control
         >
             <div
                 className="flex items-center justify-center h-full"
-                style={{ padding: '1.25rem 2.5rem', gap: '2.5rem' }}
+                style={{
+                    padding: isMobile ? '0.5rem 1.25rem' : '1.25rem 2.5rem',
+                    gap: isMobile ? '0' : '2.5rem'
+                }}
             >
                 {/* Desktop Navigation */}
                 <ul className="hidden md:flex items-center" style={{ gap: '2rem' }}>
@@ -77,17 +87,32 @@ export default function Navbar() {
                     ))}
                 </ul>
 
-                {/* Mobile Menu Button */}
-                <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="md:hidden rounded-lg"
-                    style={{
-                        padding: '0.5rem',
-                        color: theme === 'dark' ? '#d1d5db' : '#141e2e'
-                    }}
-                >
-                    {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
-                </button>
+                {/* Mobile: Logo + Hamburger in a wider capsule */}
+                <div className="md:hidden flex items-center justify-between" style={{ gap: '2rem' }}>
+                    {/* US Logo */}
+                    <a href="#home">
+                        <img
+                            src="/us.svg"
+                            alt="US Logo"
+                            style={{
+                                height: '1.75rem',
+                                width: 'auto'
+                            }}
+                        />
+                    </a>
+
+                    {/* Hamburger Button */}
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="rounded-lg"
+                        style={{
+                            padding: '0.35rem',
+                            color: theme === 'dark' ? '#d1d5db' : '#141e2e'
+                        }}
+                    >
+                        {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Menu */}
@@ -105,13 +130,13 @@ export default function Navbar() {
                         border: theme === 'dark'
                             ? '1px solid rgba(255, 255, 255, 0.08)'
                             : '1px solid rgba(0, 0, 0, 0.08)',
-                        padding: '1.5rem',
+                        padding: '1rem',
                         marginTop: '0.5rem',
                         borderRadius: '1rem',
                     }}
                     className="absolute top-full left-0 right-0 md:hidden"
                 >
-                    <ul className="flex flex-col" style={{ gap: '1rem' }}>
+                    <ul className="flex flex-col" style={{ gap: '0.5rem' }}>
                         {navItems.map((item) => (
                             <li key={item.name}>
                                 <a
@@ -121,8 +146,8 @@ export default function Navbar() {
                                     onClick={() => setIsMenuOpen(false)}
                                     className="block font-medium transition-colors"
                                     style={{
-                                        padding: '0.5rem 0',
-                                        fontSize: '1rem',
+                                        padding: '0.4rem 0',
+                                        fontSize: '0.95rem',
                                         color: theme === 'dark' ? '#d1d5db' : '#141e2e'
                                     }}
                                 >

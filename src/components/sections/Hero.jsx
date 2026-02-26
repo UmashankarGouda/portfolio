@@ -8,6 +8,13 @@ export default function Hero() {
     const { theme } = useTheme();
     const containerRef = useRef(null);
     const [svgLoaded, setSvgLoaded] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -46,7 +53,7 @@ export default function Hero() {
         <div
             ref={containerRef}
             className="relative"
-            style={{ height: '250vh' }}
+            style={{ height: isMobile ? '150vh' : '250vh' }}
         >
             {/* Fixed Hero Container */}
             <motion.div
@@ -76,7 +83,7 @@ export default function Hero() {
                     }}
                 >
                     <motion.div
-                        className="w-full max-w-4xl px-8"
+                        className={`w-full ${isMobile ? 'max-w-xs px-4' : 'max-w-4xl px-8'}`}
                         style={{
                             scale: signatureScale,
                             y: signatureY,
@@ -97,7 +104,7 @@ export default function Hero() {
                         ) : (
                             // Fallback: Text signature
                             <motion.h2
-                                className="text-6xl md:text-8xl text-center"
+                                className="text-4xl md:text-6xl lg:text-8xl text-center"
                                 style={{
                                     fontFamily: "'Great Vibes', cursive",
                                     color: theme === 'dark' ? '#8b5cf6' : '#141e2e'

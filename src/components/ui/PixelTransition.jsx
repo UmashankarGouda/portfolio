@@ -19,9 +19,6 @@ function PixelTransition({
 
     const [isActive, setIsActive] = useState(false);
 
-    const isTouchDevice =
-        'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches;
-
     useEffect(() => {
         const pixelGridEl = pixelGridRef.current;
         if (!pixelGridEl) return;
@@ -32,7 +29,8 @@ function PixelTransition({
             for (let col = 0; col < gridSize; col++) {
                 const pixel = document.createElement('div');
                 pixel.classList.add('pixelated-image-card__pixel');
-                pixel.classList.add('absolute', 'hidden');
+                pixel.style.position = 'absolute';
+                pixel.style.display = 'none';
                 pixel.style.backgroundColor = pixelColor;
 
                 const size = 100 / gridSize;
@@ -91,15 +89,16 @@ function PixelTransition({
         });
     };
 
+    const handleClick = () => {
+        if (!isActive) animatePixels(true);
+        else if (!once) animatePixels(false);
+    };
+
     const handleEnter = () => {
         if (!isActive) animatePixels(true);
     };
     const handleLeave = () => {
         if (isActive && !once) animatePixels(false);
-    };
-    const handleClick = () => {
-        if (!isActive) animatePixels(true);
-        else if (isActive && !once) animatePixels(false);
     };
 
     return (
@@ -116,13 +115,12 @@ function PixelTransition({
         max-w-full
         relative
         overflow-hidden
+        cursor-pointer
       `}
             style={style}
-            onMouseEnter={!isTouchDevice ? handleEnter : undefined}
-            onMouseLeave={!isTouchDevice ? handleLeave : undefined}
-            onClick={isTouchDevice ? handleClick : undefined}
-            onFocus={!isTouchDevice ? handleEnter : undefined}
-            onBlur={!isTouchDevice ? handleLeave : undefined}
+            onClick={handleClick}
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
             tabIndex={0}
         >
             <div style={{ paddingTop: aspectRatio }} />

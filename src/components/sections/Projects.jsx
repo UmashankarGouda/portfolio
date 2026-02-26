@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import DecryptedText from '../ui/DecryptedText';
 import TargetCursor from '../ui/TargetCursor';
@@ -89,6 +89,13 @@ const getAllProjects = () => {
 export default function Projects() {
     const { theme } = useTheme();
     const [activeTab, setActiveTab] = useState('Software');
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Get projects based on active tab
     const getFilteredProjects = () => {
@@ -103,19 +110,21 @@ export default function Projects() {
     return (
         <section
             id="projects"
-            style={{ padding: '6rem 5vw' }}
+            style={{ padding: isMobile ? '3rem 4vw' : '6rem 5vw' }}
             className={`min-h-screen flex items-center justify-center
                 ${theme === 'dark' ? 'bg-dark-bg' : 'bg-light-bg'}
             `}
         >
-            {/* TargetCursor - only active in Projects section */}
-            <TargetCursor
-                targetSelector=".cursor-target"
-                containerSelector="#projects"
-                spinDuration={2}
-                hoverDuration={0.2}
-                parallaxOn={true}
-            />
+            {/* TargetCursor - only active in Projects section, disabled on mobile */}
+            {!isMobile && (
+                <TargetCursor
+                    targetSelector=".cursor-target"
+                    containerSelector="#projects"
+                    spinDuration={2}
+                    hoverDuration={0.2}
+                    parallaxOn={true}
+                />
+            )}
 
             <div className="max-w-6xl mx-auto w-full">
                 {/* Section Header with Decrypted Text Effect */}
@@ -125,10 +134,10 @@ export default function Projects() {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                     className="flex justify-center"
-                    style={{ marginBottom: '3rem' }}
+                    style={{ marginBottom: isMobile ? '2rem' : '3rem' }}
                 >
                     <h2
-                        className="text-4xl md:text-5xl font-bold text-center text-white"
+                        className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-white"
                         style={{
                             background: theme === 'dark'
                                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
@@ -152,7 +161,7 @@ export default function Projects() {
                 </motion.div>
 
                 {/* Toggle Bar */}
-                <div className="flex justify-center px-4" style={{ marginBottom: '3rem' }}>
+                <div className="flex justify-center px-4" style={{ marginBottom: isMobile ? '2rem' : '3rem' }}>
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -168,7 +177,7 @@ export default function Projects() {
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`cursor-target relative px-4 py-5 md:px-8 md:py-8 lg:py-10 text-sm md:text-xl lg:text-2xl font-bold rounded-full transition-colors duration-200 min-w-[7rem] md:min-w-[12rem] lg:min-w-[14rem] min-h-[1rem] md:min-h-[2rem] lg:min-h-[2.5rem]
+                                className={`cursor-target relative px-3 py-3 md:px-8 md:py-8 lg:py-10 text-xs md:text-xl lg:text-2xl font-bold rounded-full transition-colors duration-200 min-w-[5rem] md:min-w-[12rem] lg:min-w-[14rem] min-h-[1rem] md:min-h-[2rem] lg:min-h-[2.5rem]
                                     ${activeTab === tab
                                         ? 'text-white'
                                         : (theme === 'dark'
@@ -194,7 +203,7 @@ export default function Projects() {
                     </motion.div>
                 </div>
 
-                {/* Projects Grid - placeholder for now */}
+                {/* Projects Grid */}
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
@@ -202,9 +211,9 @@ export default function Projects() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
-                        className="grid gap-8 justify-items-center"
+                        className="grid gap-6 md:gap-8 justify-items-center"
                         style={{
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 20rem), 1fr))'
+                            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(min(100%, 20rem), 1fr))'
                         }}
                     >
                         {filteredProjects.length === 0 ? (

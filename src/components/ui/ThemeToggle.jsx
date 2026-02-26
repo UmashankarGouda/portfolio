@@ -1,9 +1,17 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 export default function ThemeToggle() {
     const { theme, toggleTheme } = useTheme();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <motion.button
@@ -15,9 +23,9 @@ export default function ThemeToggle() {
             onClick={toggleTheme}
             className="fixed z-50 rounded-full transition-colors duration-300"
             style={{
-                top: '1.5rem',
-                right: '2rem',
-                padding: '1rem',
+                top: isMobile ? '1.25rem' : '1.5rem',
+                right: isMobile ? '1rem' : '2rem',
+                padding: isMobile ? '0.65rem' : '1rem',
                 background: theme === 'dark'
                     ? 'rgba(139, 92, 246, 0.2)'
                     : 'rgba(98, 153, 199, 0.2)',
@@ -33,7 +41,10 @@ export default function ThemeToggle() {
             }}
             aria-label="Toggle theme"
         >
-            {theme === 'dark' ? <Sun size={28} strokeWidth={2.5} /> : <Moon size={28} strokeWidth={2.5} />}
+            {theme === 'dark'
+                ? <Sun size={isMobile ? 20 : 28} strokeWidth={2.5} />
+                : <Moon size={isMobile ? 20 : 28} strokeWidth={2.5} />
+            }
         </motion.button>
     );
 }

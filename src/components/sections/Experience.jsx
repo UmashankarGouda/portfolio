@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import ExperienceFlipCard from '../ui/ExperienceFlipCard';
 import RotatingText from '../ui/RotatingText';
@@ -38,11 +39,18 @@ const experiences = [
 
 export default function Experience() {
     const { theme } = useTheme();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <section
             id="experience"
-            style={{ padding: '6rem 5vw' }}
+            style={{ padding: isMobile ? '3rem 4vw' : '6rem 5vw' }}
             className={`min-h-screen flex items-center justify-center
                 ${theme === 'dark' ? 'bg-dark-bg' : 'bg-light-bg'}
             `}
@@ -55,10 +63,10 @@ export default function Experience() {
                     transition={{ duration: 0.8 }}
                     viewport={{ once: false, amount: 0.3 }}
                     className="flex justify-center"
-                    style={{ marginBottom: '4rem' }}
+                    style={{ marginBottom: isMobile ? '2.5rem' : '4rem' }}
                 >
                     <h2
-                        className="text-2xl md:text-3xl lg:text-4xl font-bold text-white"
+                        className="text-xl md:text-3xl lg:text-4xl font-bold text-white"
                         style={{
                             background: theme === 'dark'
                                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
@@ -84,66 +92,82 @@ export default function Experience() {
 
                 {/* Timeline Container */}
                 <div className="relative">
-                    {/* Center Timeline Line */}
-                    <div
-                        className={`absolute left-1/2 -translate-x-1/2 w-1 h-full rounded-full
-                            ${theme === 'dark' ? 'bg-dark-primary/30' : 'bg-light-primary/30'}
-                        `}
-                    />
+                    {/* Center Timeline Line - hidden on mobile */}
+                    {!isMobile && (
+                        <div
+                            className={`absolute left-1/2 -translate-x-1/2 w-1 h-full rounded-full
+                                ${theme === 'dark' ? 'bg-dark-primary/30' : 'bg-light-primary/30'}
+                            `}
+                        />
+                    )}
 
                     {/* Experience Cards */}
-                    <div className="space-y-16">
+                    <div className={isMobile ? 'flex flex-col gap-6' : 'space-y-16'}>
                         {experiences.map((exp, index) => (
                             <motion.div
                                 key={exp.id}
-                                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
+                                initial={{ opacity: 0, y: isMobile ? 30 : 0, x: isMobile ? 0 : (index % 2 === 0 ? -50 : 50) }}
+                                whileInView={{ opacity: 1, y: 0, x: 0 }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 viewport={{ once: false, amount: 0.3 }}
                                 className="relative"
-                                style={{
+                                style={isMobile ? {} : {
                                     display: 'grid',
                                     gridTemplateColumns: '1fr 20px 1fr',
                                     gap: '2rem',
                                     alignItems: 'center'
                                 }}
                             >
-                                {/* Left Column */}
-                                <div className="flex justify-end">
-                                    {index % 2 === 0 && (
-                                        <ExperienceFlipCard
-                                            companyName={exp.companyName}
-                                            logo={exp.logo}
-                                            role={exp.role}
-                                            dateRange={exp.dateRange}
-                                            workLink={exp.workLink}
-                                        />
-                                    )}
-                                </div>
-
-                                {/* Center - Timeline Dot */}
-                                <div className="flex justify-center">
-                                    <div
-                                        className={`w-5 h-5 rounded-full z-20
-                                            ${theme === 'dark'
-                                                ? 'bg-dark-primary shadow-[0_0_0_4px_rgba(0,255,163,0.3)]'
-                                                : 'bg-light-primary shadow-[0_0_0_4px_rgba(107,79,187,0.3)]'}
-                                        `}
+                                {isMobile ? (
+                                    /* Mobile: Simple stacked card */
+                                    <ExperienceFlipCard
+                                        companyName={exp.companyName}
+                                        logo={exp.logo}
+                                        role={exp.role}
+                                        dateRange={exp.dateRange}
+                                        workLink={exp.workLink}
                                     />
-                                </div>
+                                ) : (
+                                    /* Desktop: Alternating left/right with timeline */
+                                    <>
+                                        {/* Left Column */}
+                                        <div className="flex justify-end">
+                                            {index % 2 === 0 && (
+                                                <ExperienceFlipCard
+                                                    companyName={exp.companyName}
+                                                    logo={exp.logo}
+                                                    role={exp.role}
+                                                    dateRange={exp.dateRange}
+                                                    workLink={exp.workLink}
+                                                />
+                                            )}
+                                        </div>
 
-                                {/* Right Column */}
-                                <div className="flex justify-start">
-                                    {index % 2 === 1 && (
-                                        <ExperienceFlipCard
-                                            companyName={exp.companyName}
-                                            logo={exp.logo}
-                                            role={exp.role}
-                                            dateRange={exp.dateRange}
-                                            workLink={exp.workLink}
-                                        />
-                                    )}
-                                </div>
+                                        {/* Center - Timeline Dot */}
+                                        <div className="flex justify-center">
+                                            <div
+                                                className={`w-5 h-5 rounded-full z-20
+                                                    ${theme === 'dark'
+                                                        ? 'bg-dark-primary shadow-[0_0_0_4px_rgba(0,255,163,0.3)]'
+                                                        : 'bg-light-primary shadow-[0_0_0_4px_rgba(107,79,187,0.3)]'}
+                                                `}
+                                            />
+                                        </div>
+
+                                        {/* Right Column */}
+                                        <div className="flex justify-start">
+                                            {index % 2 === 1 && (
+                                                <ExperienceFlipCard
+                                                    companyName={exp.companyName}
+                                                    logo={exp.logo}
+                                                    role={exp.role}
+                                                    dateRange={exp.dateRange}
+                                                    workLink={exp.workLink}
+                                                />
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </motion.div>
                         ))}
                     </div>

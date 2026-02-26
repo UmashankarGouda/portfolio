@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import TextType from '../ui/TextType';
 import CertificationFlipCard from '../ui/CertificationFlipCard';
@@ -20,11 +21,18 @@ const certificationsData = [
 
 export default function Certifications() {
     const { theme } = useTheme();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <section
             id="certifications"
-            style={{ padding: '6rem 5vw' }}
+            style={{ padding: isMobile ? '3rem 4vw' : '6rem 5vw' }}
             className={`min-h-screen flex items-center justify-center
                 ${theme === 'dark' ? 'bg-dark-bg' : 'bg-light-bg'}
             `}
@@ -37,10 +45,10 @@ export default function Certifications() {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                     className="flex justify-center"
-                    style={{ marginBottom: '4rem' }}
+                    style={{ marginBottom: isMobile ? '2rem' : '4rem' }}
                 >
                     <h2
-                        className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-white uppercase"
+                        className="text-2xl md:text-4xl lg:text-5xl font-bold text-center text-white uppercase"
                         style={{
                             background: theme === 'dark'
                                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
@@ -69,7 +77,7 @@ export default function Certifications() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true }}
-                    className="flex flex-wrap justify-center gap-8"
+                    className="flex flex-wrap justify-center gap-6 md:gap-8"
                 >
                     {certificationsData.map((cert, index) => (
                         <CertificationFlipCard
