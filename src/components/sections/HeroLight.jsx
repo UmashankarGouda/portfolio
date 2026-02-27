@@ -20,7 +20,7 @@ export default function HeroLight() {
                 <img
                     src="/assets/mobile-screen-hero-light.png"
                     alt="Hero background"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
                 />
             ) : (
                 /* Video Background for desktop */

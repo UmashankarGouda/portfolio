@@ -13,10 +13,12 @@ import Projects from './components/sections/Projects';
 import PhotoGallery from './components/sections/PhotoGallery';
 import Contact from './components/sections/Contact';
 import Footer from './components/layout/Footer';
+import Preloader from './components/ui/Preloader';
 
 function App() {
   return (
     <ThemeProvider>
+      <Preloader />
       <div className="relative">
         <Navbar />
         <ThemeToggle />
